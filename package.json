@@ -3,13 +3,15 @@
   "version": "0.0.1",
   "description": "",
   "main": "app.js",
-  "author": "Vincent Bremer",
+  "author": "Tjerk Dijkstra",
   "license": "ISC",
   "dependencies": {
     "express": "4.1.*",
     "express-session": "1.*",
     "body-parser": "1.*",
     "cookie-parser": "1.*",
-    "ejs": "1.*"
+    "jade": "1.*",
+    "nedb": "*",
+    "nodemon": "1.*"
   }
 }

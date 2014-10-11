@@ -5,26 +5,15 @@ var server       = require('http').Server(app);
 var bodyParser   = require('body-parser');
 var cookieParser = require('cookie-parser');
 var session      = require('express-session');
-var Datastore    = require('nedb');
 var config       = require('./libs/config');
-
-// Load the controllers
-var HomeController   = require('./controllers/HomeController');
-
-var db = {
-  users: new Datastore({ filename: 'storage/users.db', autoload: true })
-};
+var site         = require('./controllers/site');
+var task         = require('./controllers/tasks');
 
 
-// Set the middleware:
+app.set('view engine', 'jade');
+app.set('views', __dirname + '/views');
 
-// View directory
-app.set('views', __dirname + '/views')
-
-// Set the view engine (EJS)
-app.set('view engine', 'ejs');
-
-// Serve static files from the /public directory
+// Serve static files from the /public directoyr
 app.use(express.static(__dirname + '/public'));
 
 // Enabled the bodyparser middleware for accessing POST data
@@ -41,39 +30,16 @@ app.use(session({
 	resave: true
 }));
 
-// Routes
-app.get('/', HomeController.getIndex);
-app.post('/', HomeController.postIndex);
+// routes
 
+app.get('/', site.index);
 
-app.get('/users', function(req, res){
-    db.users.find({},function(error, users){
-        res.json(users);
-    });
-});
-
-app.get('/users/:id', function(req, res){
-
-  db.users.findOne({ _id: req.params.id }, function (err, user) {
-      res.json(user);
-  });
-
-});
-
-app.post('/users/create', function(req, res) {
-  db.users.insert(req.body, function(err, user) {
-    res.json(user);
-  });
-});
-
-
-app.put('/users/update/:id', function(req, res) {
-  // Set an existing field's value
-  db.users.update({ _id: req.params.id }, { $set: { name: req.body.name } }, function (err, numReplaced) {
-      res.send(numReplaced + 'aangepast');
-  });
-
-});
+// Tasks
+app.get('/tasks', task.list);
+app.get('/task/:id', task.view);
+app.get('/task/:id/view', task.view);
+app.get('/task/:id/edit', task.edit);
+app.put('/task/:id/edit', task.update);
 
 // Run the server
 server.listen(config.port);
