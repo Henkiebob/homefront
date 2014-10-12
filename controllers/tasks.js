@@ -4,28 +4,38 @@ var db = {
     )
 };
 
-exports.list = function(req, res){
-    db.tasks.find({},function(error, tasks){
-        res.json(tasks);
-    });
-};
 
-exports.view = function(req, res){
-    db.tasks.findOne({ _id: req.params.id }, function (err, task) {
-        res.json(task);
-    });
-};
-
-exports.edit = function(req, res){
+exports.create = function(req, res){
     db.tasks.insert(req.body, function(err, task) {
       res.json(task);
     });
 };
 
-exports.update = function(req, res){
-    db.tasks.update({ _id: req.params.id }, { $set: { name: req.body.name } }, function (err, numReplaced) {
-        res.send(numReplaced + 'aangepast');
+exports.read = function(req, res){
+    db.tasks.findOne({ _id: req.params.id }, function (err, task) {
+        res.json(task);
     });
 };
 
+exports.update = function(req, res){
+    db.tasks.update({ _id: req.params.id }, {
+        $set: {
+            name: req.body.name
+        }
+    },function (err, task) {
+        res.json(task + ' record has been updated');
+    });
+};
 
+exports.delete = function(req, res){
+    db.tasks.remove({ _id: req.params.id }, function (err, numDeleted) {
+        //res.json(task);
+        res.send(numDeleted + ' has been deleted');
+    });
+};
+
+exports.list = function(req, res){
+    db.tasks.find({},function(error, tasks){
+        res.json(tasks);
+    });
+};

@@ -7,7 +7,7 @@ var cookieParser = require('cookie-parser');
 var session      = require('express-session');
 var config       = require('./libs/config');
 var site         = require('./controllers/site');
-var task         = require('./controllers/tasks');
+var tasks         = require('./controllers/tasks');
 
 
 app.set('view engine', 'jade');
@@ -35,11 +35,11 @@ app.use(session({
 app.get('/', site.index);
 
 // Tasks
-app.get('/tasks', task.list);
-app.get('/task/:id', task.view);
-app.get('/task/:id/view', task.view);
-app.get('/task/:id/edit', task.edit);
-app.put('/task/:id/edit', task.update);
+app.get('/tasks', tasks.list);
+app.get('/task/:id', tasks.read);
+app.post('/task/create', tasks.create);
+app.put('/task/:id/update', tasks.update);
+app.get('/task/:id/delete', tasks.delete);
 
 // Run the server
 server.listen(config.port);
